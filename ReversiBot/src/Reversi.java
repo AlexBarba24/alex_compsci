@@ -501,9 +501,17 @@ public class Reversi
 					else
 						points[row][col]+=2*getNumPieces(3-playerColor,boardCopy);
 					if(getNumZSquares(playerColor, board) < getNumZSquares(playerColor, boardCopy))
-						points[row][col]-=300;
+						points[row][col]-=800;
 					points[row][col] += getNumEdge(playerColor,board)-getNumEdge(playerColor,boardCopy)*-9;
 					points[row][col] += getNumDangerZone(playerColor,board)-getNumDangerZone(playerColor,boardCopy)*4;
+					for(int r = 0; r < 8; r++) {
+						for(int c = 0; c < 8; c++) {
+							if(checkMoveSim(r,c,3-playerColor,boardCopy)) {
+								int[][] copyBoard = copyBoard(boardCopy);
+								//put a piece here in sim on copyBoard then see if there was dramatic point change or edge change etc...;
+							}
+						}
+					}
 				}
 			}
 		}
@@ -579,7 +587,7 @@ public class Reversi
 		//check if someone won
 		int playerTotal;
 		int oppTotal;
-		if (getNumMoves(playerColor,nboard) == 0){
+		if (getNumMoves(playerColor,nboard) == 0 && getNumMoves(playerColor,nboard) == 0){
 			if(playerTurn) {
 				playerTotal = getNumPieces(playerColor,nboard);
 				oppTotal = getNumPieces(3-playerColor,nboard);
@@ -594,7 +602,19 @@ public class Reversi
 			if (playerTotal < oppTotal)
 				return 0;
 		}
-
+		if(getNumMoves(playerColor,nboard)==0) {
+			double totalMoves = getNumMoves(playerColor, nboard);
+			double winRate = 0;
+			for(int r = 0; r < 8; r++) {
+				for(int c = 0; c < 8; c++) {
+					if(checkMoveSim(r,c,3-playerColor,nboard)) {
+						int[][] boardCopy = copyBoard(nboard);
+						winRate += miniMax(r,c,boardCopy,playerColor,playerTurn);
+					}
+				}
+			}
+			return winRate/totalMoves;
+		}
 		
 		
 		double totalMoves = getNumMoves(3-playerColor, nboard);
@@ -760,13 +780,13 @@ public class Reversi
 	
 	public static int getNumZSquares(int playerColor, int[][]board) {
 		int count = 0;
-		if(board[1][1]==playerColor && board[0][0]==0)
+		if(board[1][1]==playerColor && board[0][0]!=playerColor)
 			count++;
-		if(board[1][6]==playerColor && board[0][7]==0)
+		if(board[1][6]==playerColor && board[0][7]!=playerColor)
 			count++;
-		if(board[6][1]==playerColor && board[7][0]==0)
+		if(board[6][1]==playerColor && board[7][0]!=playerColor)
 			count++;
-		if(board[6][6]==playerColor && board[7][7]==0)
+		if(board[6][6]==playerColor && board[7][7]!=playerColor)
 			count++;
 		return count;
 	}
