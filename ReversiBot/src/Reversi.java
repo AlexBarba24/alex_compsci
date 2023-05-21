@@ -134,7 +134,7 @@ public class Reversi
 	//**
 	//** NOTE: It is perfectly legal to have both players human, or both
 	//**	players computer.
-	//**********************************************************************
+	//********************************************************************** 
 	{
 		String inputData = "";
 		while (!inputData.toUpperCase().equals("H") && !inputData.toUpperCase().equals("C"))
@@ -363,57 +363,6 @@ public class Reversi
 		} while (board[currY][currX] == enemyColor);
 	}
 	
-//	public static void promptHuman(int playerColor)
-//	//**********************************************************************
-//	//** promptHuman
-//	//**	Asks the human player to indicate where his/her next move will
-//	//**	be. Starts by prompting for input; input is then checked to see
-//	//**	if it valid (i.e., a letter-number combination). If it's valid,
-//	//**	the move is checked to see if it's legal (i.e., the selected
-//	//**	space results in tiles flipped), and if so, the piece is placed.
-//	//**********************************************************************
-//	{
-//		String inputData = "";
-//		boolean goodMove = false;
-//		boolean validEntry;
-//		int col = 0, row = 0;
-//		
-//		while (!goodMove)
-//		{
-//			validEntry = false;
-//			while (!validEntry)
-//			{
-//				if (playerColor == BLACK)
-//					System.out.print("Black");
-//				else
-//					System.out.print("White");
-//				System.out.print(" player, enter your move in column-row format (e.g., A5): ");
-//				inputData = input.nextLine();
-//				
-//				col = -1; row = -1;
-//				if (inputData.length() >= 2 && 
-//					inputData.toUpperCase().charAt(0) >= 'A' &&
-//					inputData.toUpperCase().charAt(0) <= 'H' &&
-//					inputData.charAt(1) >= '1' && inputData.charAt(1) <= '8')
-//				{
-//					col = inputData.toUpperCase().charAt(0) - 'A';
-//					row = Integer.parseInt(inputData.substring(1,2)) - 1;
-//				}
-//				else
-//					System.out.println("Invalid entry, please try again.");
-//				
-//				if (col >= 0 && col < 8 && row >= 0 && row < 8) validEntry = true;
-//			}
-//			
-//			if (checkMove(col, row, playerColor))
-//				goodMove = true;
-//			else
-//				System.out.println("Invalid location, try again.");
-//		}
-//		
-//		putPiece(col, row, playerColor);
-//	}
-
 	public static void promptHuman(int playerColor)
 	//**********************************************************************
 	//** promptHuman
@@ -424,17 +373,68 @@ public class Reversi
 	//**	space results in tiles flipped), and if so, the piece is placed.
 	//**********************************************************************
 	{
+		String inputData = "";
+		boolean goodMove = false;
+		boolean validEntry;
+		int col = 0, row = 0;
 		
-		boolean c = false;
-		while(!c) {
-			int row = (int)(Math.random()*8);
-			int col = (int)(Math.random()*8);
-			if(checkMove(row,col,playerColor)) {
-				putPiece(row,col,playerColor);
-				c = true;
+		while (!goodMove)
+		{
+			validEntry = false;
+			while (!validEntry)
+			{
+				if (playerColor == BLACK)
+					System.out.print("Black");
+				else
+					System.out.print("White");
+				System.out.print(" player, enter your move in column-row format (e.g., A5): ");
+				inputData = input.nextLine();
+				
+				col = -1; row = -1;
+				if (inputData.length() >= 2 && 
+					inputData.toUpperCase().charAt(0) >= 'A' &&
+					inputData.toUpperCase().charAt(0) <= 'H' &&
+					inputData.charAt(1) >= '1' && inputData.charAt(1) <= '8')
+				{
+					col = inputData.toUpperCase().charAt(0) - 'A';
+					row = Integer.parseInt(inputData.substring(1,2)) - 1;
+				}
+				else
+					System.out.println("Invalid entry, please try again.");
+				
+				if (col >= 0 && col < 8 && row >= 0 && row < 8) validEntry = true;
 			}
+			
+			if (checkMove(col, row, playerColor))
+				goodMove = true;
+			else
+				System.out.println("Invalid location, try again.");
 		}
+		
+		putPiece(col, row, playerColor);
 	}
+
+	// public static void promptHuman(int playerColor)
+	// //**********************************************************************
+	// //** promptHuman
+	// //**	Asks the human player to indicate where his/her next move will
+	// //**	be. Starts by prompting for input; input is then checked to see
+	// //**	if it valid (i.e., a letter-number combination). If it's valid,
+	// //**	the move is checked to see if it's legal (i.e., the selected
+	// //**	space results in tiles flipped), and if so, the piece is placed.
+	// //**********************************************************************
+	// {
+		
+	// 	boolean c = false;
+	// 	while(!c) {
+	// 		int row = (int)(Math.random()*8);
+	// 		int col = (int)(Math.random()*8);
+	// 		if(checkMove(row,col,playerColor)) {
+	// 			putPiece(row,col,playerColor);
+	// 			c = true;
+	// 		}
+	// 	}
+	// }
 	//**********************************************************************
 	//** MACHINE LOGIC CODE
 	//**	This is where you will put your code, to make your game as
@@ -475,13 +475,17 @@ public class Reversi
 		for(int row = 0; row < board.length; row++) {
 			for(int col = 0; col < board[0].length; col++) {
 				int[][] boardCopy = copyBoard(board);
-				if(checkMove(row,col,playerColor)) {
+				if(checkMove(col,row,playerColor)) {
 					if((row==0&&col==0)||(row==board.length-1&&col==0)||(row==0&&col==board[0].length-1)||(row==board.length-1&&col==board[0].length-1))
 						points[row][col] += corner;
-					else if(((row==0&&col==1)&&board[0][0]==0)||((row==1&&col==0)&&board[0][0]==0)||((row==0&&col==6)&&board[0][7]==0)||((row==1&&col==7)&&board[0][7]==0)||((row==6&&col==0)&&board[7][0]==0)||((row==7&&col==1)&&board[7][0]==0)||((row==7&&col==6)&&board[7][7]==0)||((row==6&&col==7)&&board[7][7]==0))
+					else if((((row==0&&col==1)&&board[0][0]!=playerColor)||((row==1&&col==0)&&board[0][0]!=playerColor)||((row==0&&col==6)&&board[0][7]!=playerColor)||((row==1&&col==7)&&board[0][7]!=playerColor)||((row==6&&col==0)&&board[7][0]!=playerColor)||((row==7&&col==1)&&board[7][0]!=playerColor)||((row==7&&col==6)&&board[7][7]!=playerColor)||((row==6&&col==7)&&board[7][7]!=playerColor))&&!isSquareSecure(row, col, playerColor, boardCopy))
 						points[row][col] += xSquares;
-					else if(((row==1&&col==1))&&board[0][0]==0||((row==1&&col==6))&&board[0][7]==0||((row==6&&col==1))&&board[7][0]==0||((row==6&&col==6))&&board[7][7]==0)
+					else if(((row==0&&col==1)&&board[0][0]==playerColor)||((row==1&&col==0)&&board[0][0]==playerColor)||((row==0&&col==6)&&board[0][7]==playerColor)||((row==1&&col==7)&&board[0][7]==playerColor)||((row==6&&col==0)&&board[7][0]==playerColor)||((row==7&&col==1)&&board[7][0]==playerColor)||((row==7&&col==6)&&board[7][7]==playerColor)||((row==6&&col==7)&&board[7][7]==playerColor))
+						points[row][col] -= xSquares;
+					else if(((row==1&&col==1))&&board[0][0]!=playerColor||((row==1&&col==6))&&board[0][7]!=playerColor||((row==6&&col==1))&&board[7][0]!=playerColor||((row==6&&col==6))&&board[7][7]!=playerColor)
 						points[row][col] += zSquares;
+					else if(((row==1&&col==1))&&board[0][0]==playerColor||((row==1&&col==6))&&board[0][7]==playerColor||((row==6&&col==1))&&board[7][0]==playerColor||((row==6&&col==6))&&board[7][7]==playerColor)
+						points[row][col] -= zSquares;
 					else if(((row<6&&row>1)&&col==0)||((row<6&&row>1)&&col==7)||(row==0&&(col<6&&col>1))||(row==7&&(col<6&&col>1)))
 						points[row][col] += edge;
 					else if((row==1&&(col >= 1 && col <= board[0].length))||((row >= 1 && row <= board.length-2)&&col==1)||((row >= 1 && row <= board.length-2)&&col==board[0].length-2)||(row==board.length-2 && (col >= 1 && col <= board[0].length-2)))
@@ -491,40 +495,98 @@ public class Reversi
 				}else {
 					points[row][col] = -1000000;
 				}
-				if(checkMove(row,col,playerColor)) {
-					putPieceSim(row,col,playerColor,boardCopy);
+				if(checkMove(col,row,playerColor)) {
+					if(isSquareSecure(row, col, playerColor, board))
+						points[row][col]+=500;
+					putPieceSim(col,row,playerColor,boardCopy);
 					points[row][col]-=getNumMoves(3-playerColor,boardCopy);
 					if(isVulenerableEdge(boardCopy))
 						points[row][col] -= 100;
-					if(numMoves < 16)
+					if(numMoves < 12)
 						points[row][col]-=getNumPieces(3-playerColor,boardCopy);
 					else
 						points[row][col]+=2*getNumPieces(3-playerColor,boardCopy);
 					if(getNumZSquares(playerColor, board) < getNumZSquares(playerColor, boardCopy))
-						points[row][col]-=800;
+						points[row][col]-=10000;
+					if(((row<6&&row>1)&&col==0))
+						if(getNumOnEdge(2, boardCopy)==5)
+							points[row][col]-=1000;
+					if(((row<6&&row>1)&&col==7))
+						if(getNumOnEdge(4, boardCopy)==5)
+							points[row][col]-=1000;
+					if(((col<6&&col>1)&&row==0))
+						if(getNumOnEdge(1, boardCopy)==5)
+							points[row][col]-=1000;
+					if(((col<6&&col>1)&&row==7))
+						if(getNumOnEdge(3, boardCopy)==5)
+							points[row][col]-=1000;
 					points[row][col] += getNumEdge(playerColor,board)-getNumEdge(playerColor,boardCopy)*-9;
 					points[row][col] += getNumDangerZone(playerColor,board)-getNumDangerZone(playerColor,boardCopy)*4;
-					for(int r = 0; r < 8; r++) {
-						for(int c = 0; c < 8; c++) {
-							if(checkMoveSim(r,c,3-playerColor,boardCopy)) {
-								int[][] copyBoard = copyBoard(boardCopy);
-								//put a piece here in sim on copyBoard then see if there was dramatic point change or edge change etc...;
+					int[][] peints = new int[8][8];
+					for(int rew = 0; rew < boardCopy.length; rew++) {
+						for(int cel = 0; cel < boardCopy[0].length; cel++) {
+							int[][] copyBoard = copyBoard(boardCopy);
+							int[][] boardCepy = copyBoard(boardCopy);
+							if(checkMoveSim(cel,rew,3-playerColor, boardCopy)) {
+								if((rew==0&&cel==0)||(rew==boardCopy.length-1&&cel==0)||(rew==0&&cel==boardCopy[0].length-1)||(rew==boardCopy.length-1&&cel==boardCopy[0].length-1))
+									peints[rew][cel] += corner;
+								else if(((rew==0&&cel==1)&&boardCopy[0][0]==0)||((rew==1&&cel==0)&&boardCopy[0][0]==0)||((rew==0&&cel==6)&&boardCopy[0][7]==0)||((rew==1&&cel==7)&&boardCopy[0][7]==0)||((rew==6&&cel==0)&&boardCopy[7][0]==0)||((rew==7&&cel==1)&&boardCopy[7][0]==0)||((rew==7&&cel==6)&&boardCopy[7][7]==0)||((rew==6&&cel==7)&&boardCopy[7][7]==0))
+									peints[rew][cel] += xSquares;
+								else if(((rew==1&&cel==1))&&boardCopy[0][0]==0||((rew==1&&cel==6))&&boardCopy[0][7]==0||((rew==6&&cel==1))&&boardCopy[7][0]==0||((rew==6&&cel==6))&&boardCopy[7][7]==0)
+									peints[rew][cel] += zSquares;
+								else if(((rew<6&&rew>1)&&cel==0)||((rew<6&&rew>1)&&cel==7)||(rew==0&&(cel<6&&cel>1))||(rew==7&&(cel<6&&cel>1)))
+									peints[rew][cel] += edge;
+								else if((rew==1&&(cel >= 1 && cel <= boardCopy[0].length))||((rew >= 1 && rew <= boardCopy.length-2)&&cel==1)||((rew >= 1 && rew <= boardCopy.length-2)&&cel==boardCopy[0].length-2)||(rew==boardCopy.length-2 && (cel >= 1 && cel <= boardCopy[0].length-2)))
+									peints[rew][cel] += dangerZone;
+								else if((rew >= 3 && rew <= 7)&&(cel >= 3 && cel <= 7))
+									peints[rew][cel] += middle;
+							}else {
+								peints[rew][cel] = -1000000;
+							}
+							if(checkMoveSim(cel,rew,3-playerColor, copyBoard)) {
+								if(isSquareSecure(cel, rew, 3-playerColor, boardCopy))
+									peints[rew][cel]+=500;
+								putPieceSim(cel,rew,3-playerColor,copyBoard);
+								peints[rew][cel]-=getNumMoves(playerColor,copyBoard);
+								if(isVulenerableEdge(copyBoard))
+									peints[rew][cel] -= 100;
+								if(numMoves < 16)
+									peints[rew][cel]-=getNumPieces(playerColor,copyBoard);
+								else
+									peints[rew][cel]+=2*getNumPieces(playerColor,copyBoard);
+								if(getNumZSquares(3-playerColor, board) < getNumZSquares(3-playerColor, copyBoard))
+									peints[rew][cel]-=800;
+								peints[rew][cel] += getNumEdge(3-playerColor,board)-getNumEdge(3-playerColor,copyBoard)*-9;
+								peints[rew][cel] += getNumDangerZone(3-playerColor,board)-getNumDangerZone(3-playerColor,copyBoard)*4;
+								
 							}
 						}
+					}							
+					int max = -100000000;
+					for(int rew = 0; rew < peints.length; rew++) {
+						for(int cel = 0; cel < peints[0].length; cel++) {
+							if(peints[rew][cel] > max)
+								max = peints[rew][cel];
+						}
 					}
+					points[row][col] -= max/4;
 				}
 			}
 		}
 
 		
-		
-		
-		if(numMoves > 24) {
-			for(int row = 0; row < board.length; row++) {
-				for(int col = 0; col < board[0].length; col++) {
-					if(checkMove(row,col,playerColor)) {
+
+		boolean stopMiniMax = false;
+		if(numMoves > 25) {
+			for(int row = 0; row < board.length&&!stopMiniMax; row++) {
+				for(int col = 0; col < board[0].length&&!stopMiniMax; col++) {
+					if(checkMove(col,row,playerColor)) {
 						int[][] boardCopy = copyBoard(board);
-						points[row][col] = (int) (miniMax(row,col,boardCopy,playerColor,true)*10000);
+						double miniMax =miniMax(row,col,boardCopy,playerColor,true);
+						int point = (int) (miniMax*1000000);
+						if(point == 1000000)
+							stopMiniMax = true;
+						points[row][col] = point;
 					}else {
 						points[row][col] = -500;
 					}
@@ -538,6 +600,7 @@ public class Reversi
 					max = points[row][col];
 			}
 		}
+		System.out.print("With a weight of: "+max);
 		int moveRow = 0;
 		int moveCol = 0;
 		for(int row = 0; row < points.length; row++) {
@@ -577,23 +640,23 @@ public class Reversi
 				break;
 		}
 		temp += (moveRow+1);
-		System.out.println("Computer placed piece at location: " + temp);
-		putPiece(moveRow,moveCol,playerColor);
+		System.out.println(", Computer placed piece at location: " + temp);
+		putPiece(moveCol,moveRow,playerColor);
 	}
 	
 	public static double miniMax(int row, int col, int nboard[][], int playerColor, boolean playerTurn) {
-		putPieceSim(row,col,playerColor,nboard);
+		putPieceSim(col,row,playerColor,nboard);
 
 		//check if someone won
 		int playerTotal;
 		int oppTotal;
-		if (getNumMoves(playerColor,nboard) == 0 && getNumMoves(playerColor,nboard) == 0){
+		if (getNumMoves(playerColor,nboard) == 0 && getNumMoves(3-playerColor,nboard) == 0){
 			if(playerTurn) {
 				playerTotal = getNumPieces(playerColor,nboard);
 				oppTotal = getNumPieces(3-playerColor,nboard);
 			}else {
-				playerTotal = getNumPieces(playerColor,nboard);
-				oppTotal = getNumPieces(3-playerColor,nboard);
+				playerTotal = getNumPieces(3-playerColor,nboard);
+				oppTotal = getNumPieces(playerColor,nboard);
 			}
 			if (playerTotal == oppTotal)
 				return 1;
@@ -601,15 +664,16 @@ public class Reversi
 				return 1;
 			if (playerTotal < oppTotal)
 				return 0;
-		}
-		if(getNumMoves(playerColor,nboard)==0) {
-			double totalMoves = getNumMoves(playerColor, nboard);
+		}//125
+		if(getNumMoves(3-playerColor,nboard)==0) {
+			double totalMoves = 0;
 			double winRate = 0;
 			for(int r = 0; r < 8; r++) {
 				for(int c = 0; c < 8; c++) {
-					if(checkMoveSim(r,c,3-playerColor,nboard)) {
+					if(checkMoveSim(c,r,playerColor,nboard)) {
 						int[][] boardCopy = copyBoard(nboard);
 						winRate += miniMax(r,c,boardCopy,playerColor,playerTurn);
+						totalMoves++;
 					}
 				}
 			}
@@ -617,14 +681,14 @@ public class Reversi
 		}
 		
 		
-		double totalMoves = getNumMoves(3-playerColor, nboard);
+		double totalMoves = 0;
 		double winRate = 0;
 		for(int r = 0; r < 8; r++) {
 			for(int c = 0; c < 8; c++) {
-
-				if(checkMoveSim(r,c,playerColor,nboard)) {
+				if(checkMoveSim(c,r,3-playerColor,nboard)) {
 					int[][] boardCopy = copyBoard(nboard);
 					winRate += miniMax(r,c,boardCopy,3-playerColor,!playerTurn);
+					totalMoves++;
 				}
 			}
 		}
@@ -693,11 +757,11 @@ public class Reversi
 		} while (board[currY][currX] == enemyColor);
 	}
 	
-	public static int getNumMoves(int playerColor, int[][]board) {
+	public static int getNumMoves(int playerColor, int[][]nboard) {
 		int count = 0;
-		for(int row = 0; row < board.length; row++) {
-			for(int col = 0; col < board[0].length; col++) {
-				if(checkMoveSim(row,col,playerColor,board))
+		for(int row = 0; row < 8; row++) {
+			for(int col = 0; col < 8; col++) {
+				if(checkMoveSim(col,row,playerColor,nboard))
 					count++;
 			}
 		}
@@ -715,6 +779,154 @@ public class Reversi
 		return count;
 	}
 	
+	public static boolean isSquareSecure(int row, int col, int playerColor, int[][]board){
+		for(int i = row+1; i < 8; i++){
+			if(board[i][col]==EMPTY){
+				for(int j = row-1; j>=0; j--){
+					if(board[j][col]==EMPTY)
+						return false;
+					if(board[j][col]==3-playerColor)
+						return false;
+				}
+			}
+			else if(board[i][col]==3-playerColor){
+				for(int j = row-1; j>=0; j--){
+					if(board[j][col]==EMPTY)
+						return false;
+					if(board[j][col]==3-playerColor)
+						break;
+				}
+			}
+		}
+		for(int i = row-1; i >= 0; i--){
+			if(board[i][col]==EMPTY){
+				for(int j = row+1; j<8; j++){
+					if(board[j][col]==EMPTY)
+						return false;
+					if(board[j][col]==3-playerColor)
+						return false;
+				}
+			}
+			else if(board[i][col]==3-playerColor){
+				for(int j = row+1; j<8; j++){
+					if(board[j][col]==EMPTY)
+						return false;
+					if(board[j][col]==3-playerColor)
+						break;
+				}
+			}
+		}
+		for(int i = col+1; i < 8; i++){
+			if(board[row][i]==EMPTY){
+				for(int j = col-1; j>=0; j--){
+					if(board[j][col]==EMPTY)
+						return false;
+					if(board[j][col]==3-playerColor)
+						return false;
+				}
+			}
+			else if(board[i][col]==3-playerColor){
+				for(int j = col-1; j>=0; j--){
+					if(board[j][col]==EMPTY)
+						return false;
+					if(board[j][col]==3-playerColor)
+						break;
+				}
+			}
+		}
+		for(int i = col-1; i >= 0; i--){
+			if(board[row][i]==EMPTY){
+				for(int j = col+1; j<8; j++){
+					if(board[j][col]==EMPTY)
+						return false;
+					if(board[j][col]==3-playerColor)
+						return false;
+				}
+			}
+			else if(board[i][col]==3-playerColor){
+				for(int j = col+1; j<8; j++){
+					if(board[j][col]==EMPTY)
+						return false;
+					if(board[j][col]==3-playerColor)
+						break;
+				}
+			}
+		}
+		for(int i = 1; row+i<8&&col+i<8&&row+i>=0&&col+i>=0; i++){
+			if(board[row+i][col+i]==EMPTY){
+				for(int j = -1; row+j<8&&col+j<8&&row+j>=0&&col+j>=0; j--){
+					if(board[row+j][col+j]==EMPTY)
+						return false;
+					if(board[row+j][col+j]==3-playerColor)
+						return false;
+				}
+			}
+			else if(board[row+i][col+i]==3-playerColor){
+				for(int j = -1; row+j<8&&col+j<8&&row+j>=0&&col+j>=0; j--){
+					if(board[row+j][col+j]==EMPTY)
+						return false;
+					if(board[row+j][col+j]==3-playerColor)
+						break;
+				}
+			}
+		}
+		for(int i = -1; row+i<8&&col+i<8&&row+i>=0&&col+i>=0; i--){
+			if(board[row+i][col+i]==EMPTY){
+				for(int j = 1; row+j<8&&col+j<8&&row+j>=0&&col+j>=0; j++){
+					if(board[row+j][col+j]==EMPTY)
+						return false;
+					if(board[row+j][col+j]==3-playerColor)
+						return false;
+				}
+			}
+			else if(board[row+i][col+i]==3-playerColor){
+				for(int j = 1; row+j<8&&col+j<8&&row+j>=0&&col+j>=0; j++){
+					if(board[row+j][col+j]==EMPTY)
+						return false;
+					if(board[row+j][col+j]==3-playerColor)
+						break;
+				}
+			}
+		}
+		for(int i = 1; row+i<8&&col-i<8&&row+i>=0&&col-i>=0; i++){
+			if(board[row+i][col-i]==EMPTY){
+				for(int j = -1; row+j<8&&col-j<8&&row+j>=0&&col-j>=0; j--){
+					if(board[row+j][col-j]==EMPTY)
+						return false;
+					if(board[row+j][col-j]==3-playerColor)
+						return false;
+				}
+			}
+			else if(board[row+i][col-i]==3-playerColor){
+				for(int j = -1; row+j<8&&col-j<8&&row+j>=0&&col-j>=0; j--){
+					if(board[row+j][col-j]==EMPTY)
+						return false;
+					if(board[row+j][col-j]==3-playerColor)
+						break;
+				}
+			}
+		}
+		for(int i = -1; row+i<8&&col-i<8&&row+i>=0&&col-i>=0; i--){
+			if(board[row+i][col-i]==EMPTY){
+				for(int j = 1; row+j<8&&col-j<8&&row+j>=0&&col-j>=0; j++){
+					if(board[row+j][col-j]==EMPTY)
+						return false;
+					if(board[row+j][col-j]==3-playerColor)
+						return false;
+				}
+			}
+			else if(board[row+i][col-i]==3-playerColor){
+				for(int j = 1; row+j<8&&col-j<8&&row+j>=0&&col-j>=0; j++){
+					if(board[row+j][col-j]==EMPTY)
+						return false;
+					if(board[row+j][col-j]==3-playerColor)
+						break;
+				}
+			}
+		}
+		return true;
+	}
+
 	public static boolean isVulenerableEdge(int[][]board) {
 		boolean retVal;
 		int count = 0;
@@ -778,6 +990,33 @@ public class Reversi
 		return retVal;
 	}
 	
+	public static int getNumOnEdge(int edge, int[][]board){
+		int count = 0;
+		switch(edge){
+			case 1:
+				for(int i = 1; i < 7; i++)
+					if(board[0][i]!=EMPTY)
+						count++;
+				break;
+			case 2:
+				for(int i = 1; i < 7; i++)
+					if(board[i][0]!=EMPTY)
+						count++;
+				break;
+			case 3:
+				for(int i = 1; i < 7; i++)
+					if(board[7][i]!=EMPTY)
+						count++;
+				break;
+			case 4:
+				for(int i = 1; i < 7; i++)
+					if(board[i][7]!=EMPTY)
+						count++;
+				break;
+		}
+		return count;
+	}
+
 	public static int getNumZSquares(int playerColor, int[][]board) {
 		int count = 0;
 		if(board[1][1]==playerColor && board[0][0]!=playerColor)
@@ -877,10 +1116,10 @@ public class Reversi
 	//** Machine Logic Variables
 	//*******************************
 	static final int edge = 60;
-	static final int corner = 1000;
-	static final int dangerZone = -50;
-	static final int xSquares = -250;
-	static final int zSquares = -250;
+	static final int corner = 1000000;
+	static final int dangerZone = -70;
+	static final int xSquares = -1250;
+	static final int zSquares = -1200;
 	static final int middle = 50;
 	static int numMoves = 0;
 }
